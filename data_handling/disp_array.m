@@ -8,7 +8,7 @@
 % Moritz Schappler, schappler@imes.uni-hannover.de, 2018-03
 % (C) Institut für mechatronische Systeme, Universität Hannover
 
-function s = disp_vector(x, format)
+function s = disp_array(x, format)
 s = '';
 for i = 1:size(x, 1)
     if i>1
