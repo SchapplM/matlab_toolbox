@@ -18,7 +18,7 @@ function x=solve_pseudo_inverse_Skew_transpose(v,b)
       'solve_pseudo_inverse_Skew_transpose: v = [3x1] double');
   assert(all(size(b)==[3 1]), ...
       'solve_pseudo_inverse_Skew_transpose: b = [3x1] double');
-  % Moore–Penrose pseudoinverse of S(v)^T is 1/|v|^2*S(v) (can be shown by using
+  % Moore-Penrose pseudoinverse of S(v)^T is 1/|v|^2*S(v) (can be shown by using
   % the Grassmann identity)
   x = 1/(v(1)^2+v(2)^2+v(3)^2)*cross(v,b);
 end
