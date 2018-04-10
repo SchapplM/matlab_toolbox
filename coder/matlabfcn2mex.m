@@ -176,6 +176,9 @@ for i = 1:length(KompDat)
       if strcmp(err.identifier,'emlc:compilationError')
         fprintf('\tFehler beim Kompilieren\n');
         Fehlercode = 2;
+      else
+        warning('Unerwarteter Fehler beim Kompilieren: %s\n%s', err.identifier, err.message);
+        Fehlercode = 2;
       end
     end
     fprintf('\tDauer: %1.1f s\n', toc(t1));
