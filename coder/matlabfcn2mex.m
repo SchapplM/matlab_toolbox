@@ -4,7 +4,11 @@
 % sie mit dem Matlab-Coder als mex-Datei in den selben Ordner
 % 
 % Damit die Kompilierung möglich ist, müssen alle Eingabevariablen mit
-% assert vordimensioniert werden. Die Funktion muss "%#codegen" enthalten
+% assert vordimensioniert werden hinsichtlich Typ, Komplexität und Dimension. 
+% Die Funktion muss "%#codegen" enthalten
+% Beispielargumente für die Funktion können mit der Zeile %#cgargs {...}
+% vorgegeben werden, wobei die geschweifte(!) Klammer die Beispieleingaben
+% enthält. Damit kann die Typvorgabe (assert(isa(...)) entfallen.
 % 
 % Eingaben:
 % KompDat
@@ -22,11 +26,15 @@
 %   0: Kein Fehler
 %   1: Datei nicht gefunden
 %   2: Fehler beim kompilieren
+% 
+% Beispiel: matlabfcn2mex({'rotx', 'roty', 'rotz'});
 
-% Moritz Schappler, schappler@irt.uni-hannover.de, 2013-08
-% (c) Institut für Regelungstechnik, Universität Hannover
+% Quelle:
+% https://de.mathworks.com/help/fixedpoint/ug/define-input-properties-programmatically-in-the-matlab-file.html
+% `doc codegen`
 
-
+% Moritz Schappler, moritz.schappler@imes.uni-hannover.de, 2013-08
+% (C) Institut für mechatronische Systeme, Universität Hannover
 
 function Fehlercode = matlabfcn2mex(KompDat, launchreport, notmp, force, skiponerror)
 
@@ -155,6 +163,7 @@ for i = 1:length(KompDat)
       end
     end
     %% Kompilieren
+    % Befehl für Aufruf von codegen zusammenstellen und ausführen
     if ~neukompilieren
       fprintf('\tKompilieren nicht erforderlich. Keine Änderungen erkannt.\n');
       continue
@@ -170,6 +179,34 @@ for i = 1:length(KompDat)
     if nargin >1 && launchreport
       cmdstring = [cmdstring, ' -launchreport'];%#ok<AGROW> % (erstellt einen Report auch bei Erfolg)
     end
+    % Suche Beispiel-Übergabeargumente; gekennzeichnet durch %#cgargs
+    % Damit ist es nicht mehr notwendig, die Übergabeargumente mit
+    % isa(x,'double') zu kennzeichnen, was symbolische Eingaben unmöglich
+    % macht.
+    fid = fopen(fullfile(mdat_pfad, [mdat_name, suffix_m]),'r');
+    tline = fgetl(fid);
+    cga_found = false;
+    cga_line = '';
+    while ischar(tline)
+      if contains(tline, '%#cgargs')
+        if ~cga_found % erstes Vorkommnis
+          cga_line = tline(9:end);
+          cga_found = true;
+        else % mehrzeilig
+          cga_line = [cga_line, tline(9:end)]; %#ok<AGROW>
+        end
+      elseif cga_found
+        % Der (mehrzeilige) Kommentar ist vorbei
+        break;
+      end
+      tline = fgetl(fid);
+    end
+    fclose(fid);
+    if ~isempty(cga_line)
+      cmdstring = [cmdstring, ' -args ', cga_line]; %#ok<AGROW>
+    end
+
+    % Befehl ausführen
     try  
       eval(cmdstring);
     catch err
