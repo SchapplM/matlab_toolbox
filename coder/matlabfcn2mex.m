@@ -6,7 +6,7 @@
 % Damit die Kompilierung möglich ist, müssen alle Eingabevariablen mit
 % assert vordimensioniert werden hinsichtlich Typ, Komplexität und Dimension. 
 % Die Funktion muss "%#codegen" enthalten
-% Beispielargumente für die Funktion können mit der Zeile %#cgargs {...}
+% Beispielargumente für die Funktion können mit der Zeile %$cgargs {...}
 % vorgegeben werden, wobei die geschweifte(!) Klammer die Beispieleingaben
 % enthält. Damit kann die Typvorgabe (assert(isa(...)) entfallen.
 % 
@@ -179,7 +179,7 @@ for i = 1:length(KompDat)
     if nargin >1 && launchreport
       cmdstring = [cmdstring, ' -launchreport'];%#ok<AGROW> % (erstellt einen Report auch bei Erfolg)
     end
-    % Suche Beispiel-Übergabeargumente; gekennzeichnet durch %#cgargs
+    % Suche Beispiel-Übergabeargumente; gekennzeichnet durch %$cgargs
     % Damit ist es nicht mehr notwendig, die Übergabeargumente mit
     % isa(x,'double') zu kennzeichnen, was symbolische Eingaben unmöglich
     % macht.
@@ -188,7 +188,7 @@ for i = 1:length(KompDat)
     cga_found = false;
     cga_line = '';
     while ischar(tline)
-      if contains(tline, '%#cgargs')
+      if contains(tline, '%$cgargs')
         if ~cga_found % erstes Vorkommnis
           cga_line = tline(9:end);
           cga_found = true;
