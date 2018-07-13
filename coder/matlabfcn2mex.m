@@ -114,7 +114,7 @@ for i = 1:length(KompDat)
     %% Die mex-Datei testen
     if ~neukompilieren
       try
-          eval(mexdat_name);
+          eval([mexdat_name,';']);
       catch err
           if strcmp(err.identifier,'MATLAB:invalidMEXFile')
               % Mex-Datei funktioniert nicht
