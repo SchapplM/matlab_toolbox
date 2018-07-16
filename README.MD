@@ -18,8 +18,9 @@ Die einzelnen Funktionen des Repos können über die Modultests aus dem Ordner `
 Hier erfolgt eine kurze Übersicht der im Repo enthaltenen Funktionen. Die Funktionsweise ist in den jeweiligen Funktionsdateien und Modultests erklärt.
 
 * Kompilierung (Ordner `coder`)
-  * Automatische Kompilierung einer Matlab-Funktion als .mex-Datei: `create_mex_from_matlabfcn.m`
+  * Automatische Kompilierung einer Matlab-Funktion als .mex-Datei: `matlabfcn2mex.m`
   * Automatische Kompilierung aller mex-Abhängigkeiten eines Matlab-Skriptes: `mex_script_dependencies.m`
+  * Kompilierung aller Matlab-Funktionen in einem Verzeichnis: `mex_all_matlabfcn_in_dir.m`
 * Datenverarbeitung (Ordner `data_handling`)
   * Umwandlung der Ausgabe von über Matlab-Skripte gestarteten Simulink-Modellen in andere Datenformate: `simulink_signal2struct.m`
   * Verarbeitung von Datenstrukturen, die Zeitreihen von Daten enthalten. Dies ist vorteilhaft bei der Handhabung von Trajektorien und Simulations- und Messdaten: `timestruct_append.m`, `timestruct_merge.m`, `timestruct_repeat.m`, ...
