@@ -31,12 +31,12 @@ for i = 1:length(axhdl)
       continue
     end
     if j == 1
-      minmax_all(i,:) = minmax(data);
+      minmax_all(i,:) = minmax2(data);
     else
-      minmax_all(i,:) = minmax([data, minmax_all(i,:)]);
+      minmax_all(i,:) = minmax2([data, minmax_all(i,:)]);
     end
     
   end
 end
 
-minmax_total = minmax(minmax_all(:)');
+minmax_total = minmax2(minmax_all(:)');
