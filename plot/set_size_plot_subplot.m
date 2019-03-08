@@ -28,7 +28,7 @@
 % Alexander Tödtheide toedtheide@irt.uni-hannover.de, 2015-06
 % (c) Institut für Regelungstechnik, Leibniz Universität Hannover
 
-function set_sizePositionPlotSubplot_byHandle(fig_handle,fig_width,fig_height,axhdl,bl,br,hu,hd,bdx,bdy)
+function set_size_plot_subplot(fig_handle,fig_width,fig_height,axhdl,bl,br,hu,hd,bdx,bdy)
 
 % Die Größe und Position von Figure und Subplots bestimmen
 
@@ -42,6 +42,15 @@ n_cols = size(axhdl,2);
 b = (1 - bl - br -(n_cols-1)*bdx)/n_cols;
 h = (1 - hu - hd -(n_rows-1)*bdy)/n_rows;
 
+%% Maximierung aufheben
+
+% Aus figureFullScreen.m; Nikolay S.
+warning('off','MATLAB:HandleGraphics:ObsoletedProperty:JavaFrame');
+jFrame = get(fig_handle,'JavaFrame');
+pause(0.3);    % unless pause is used error accures orm time to time. 
+               % I guess jFrame takes some time to initialize
+set(jFrame,'Maximized',false);
+warning('on','MATLAB:HandleGraphics:ObsoletedProperty:JavaFrame');
 %% Größe setzen
 
 % Größe der axis-handles

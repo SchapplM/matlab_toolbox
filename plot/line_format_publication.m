@@ -53,7 +53,7 @@ for i = 1:length(linhdl)
   % Namen setzen, damit Linien wiederfindbar sind
   set(linhdl(i), 'DisplayName', displaynames{i});
   % Linienformat setzen
-  set(linhdl(i), 'Color', format{i,1}, 'LineStyle', format{i,3});
+  set(linhdl(i), 'Color', format{i,1}, 'LineStyle', format{i,3}, 'Marker', 'none');
   
   % Marker so setzen, dass sie gut verteilt sind und Legendeneinträge gut
   % aussehen
