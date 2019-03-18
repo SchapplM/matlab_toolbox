@@ -3,12 +3,16 @@
 % Durchsucht den Matlab-Pfad nach den angegebenen Funktionen und kompiliert
 % sie mit dem Matlab-Coder als mex-Datei in den selben Ordner
 % 
-% Damit die Kompilierung möglich ist, müssen alle Eingabevariablen mit
-% assert vordimensioniert werden hinsichtlich Typ, Komplexität und Dimension. 
-% Die Funktion muss "%#codegen" enthalten
-% Beispielargumente für die Funktion können mit der Zeile %$cgargs {...}
-% vorgegeben werden, wobei die geschweifte(!) Klammer die Beispieleingaben
-% enthält. Damit kann die Typvorgabe (assert(isa(...)) entfallen.
+% * Damit die automatische Kompilierung möglich ist, müssen alle Eingabevariablen mit
+%   `assert` vordimensioniert werden hinsichtlich Typ, Komplexität und Dimension. 
+% * Die zu kompilierende Funktion muss "%#codegen" enthalten
+% * Beispielargumente für die Funktion können mit der Zeile %$cgargs {...}
+%   vorgegeben werden, wobei die geschweifte(!) Klammer die Beispieleingaben
+%   enthält. Damit kann die Typvorgabe (assert(isa(...)) entfallen.
+%   Beispiele für die cgargs-Zeile (Inhalt der geschweiften Klammer):
+%   {zeros(3,3), zeros(3,1)}                          % 3x3-Matrix und 3x1-Vektor
+%   {coder.newtype('double',[inf,6])}                 % Nx6-Matrix (beliebig viele Zeilen
+%   {struct('field 1', zeros(3,3), 'field2', uint8(0)}% Struktur mit geg. Feldern
 % 
 % Eingaben:
 % KompDat
@@ -31,6 +35,7 @@
 
 % Quelle:
 % https://de.mathworks.com/help/fixedpoint/ug/define-input-properties-programmatically-in-the-matlab-file.html
+% https://de.mathworks.com/help/fixedpoint/ref/coder.newtype.html
 % `doc codegen`
 
 % Moritz Schappler, moritz.schappler@imes.uni-hannover.de, 2013-08
