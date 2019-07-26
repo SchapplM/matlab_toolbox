@@ -84,8 +84,8 @@ for i = 1:length(KompDat)
     mdat_name = KompDat{i};
     fprintf('%02d (%s):\n', i, mdat_name);
     mexdat_name = [mdat_name, '_mex'];
-    [mdat_pfad, ~, suffix_m] = fileparts(which(mdat_name));
-    if strcmp(mdat_pfad, '')
+    [mdat_pfad, mdat_name_fs, suffix_m] = fileparts(which(mdat_name));
+    if strcmp(mdat_pfad, '') || ~strcmp(mdat_name_fs, mdat_name) % Prüfe, ob Groß-/Kleinschreibung korrekt
         fprintf('\tm-Datei nicht gefunden.\n');
         if skiponerror
           Fehlercode = 1;
