@@ -27,18 +27,27 @@ for i = 1:length(axhdl(:))
     set(h, 'FontSize', 8);
     set(h, 'FontName', 'times');
   end
-
+  
   % Achsen-Einteilungsbeschriftung formatieren
   % ??
 
   % Rand vollständig zeichnen
-  set(gca, 'Box', 'on')
+  set(gca, 'Box', 'on');
 
+  % Legende formatieren
+
+  set(gca, 'FontName', 'times', 'FontSize', 8);
+  
+  % Textfelder
+  ch = get(gca,'children');
+  for j = 1:length(ch)
+    if strcmp(get(ch(j), 'type'), 'text')
+      set(ch(j), 'FontName', 'times');
+    end
+  end
 end
 
-% Legende formatieren
-ch = get(gcf,'children');
-set(ch(1), 'FontName', 'times', 'FontSize', 8);
+
 
 % Weißer Hintergrund
 set(gcf,'color','w');
