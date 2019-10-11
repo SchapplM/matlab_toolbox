@@ -1,5 +1,5 @@
 % Abhängigkeiten eines Matlab-Skriptes an einen Ort kopieren
-% Dies kann z.B. zur Weitergabe von Skripten passieren, ohne das die
+% Dies kann z.B. zur Weitergabe von Skripten passieren, ohne dass die
 % komplette Toolbox-Umgebung mit weitergegeben wird.
 % 
 % Eingabe:
@@ -30,9 +30,24 @@ mkdirs(dest_path);
 % Abhängigkeiten zusammenstellen und durchgehen
 fList = matlab.codetools.requiredFilesAndProducts( script_filepath );
 for i = 1:length(fList)
-  [~, fname, ext] = fileparts(fList{i});
+  [fdir, fname, ext] = fileparts(fList{i});
+  % Prüfe, ob Funktion Teil einer Klasse ist. Dann muss die ganze Klasse
+  % kopiert werden
+  [~,ffolder] = fileparts(fdir);
+  if strcmp(ffolder(1), '@') % Matlab-Klassen beginnen mit "@" im Ordner
+    isclass = true;
+  else
+    isclass = false;
+  end
   % Kopiere Abhängigkeit zum Zielpfad
-  destpath = fullfile(dest_path, [fname,ext]);
+  if ~isclass
+    % Normale Funktion in Hauptordner
+    destpath = fullfile(dest_path, [fname,ext]);
+  else
+    % Erstelle den Ordner für die Klasse und benutze den als Ziel
+    mkdirs(fullfile(dest_path, ffolder));
+    destpath = fullfile(dest_path, ffolder, [fname,ext]);
+  end
   copyfile(fList{i}, destpath);
   if verbose
     fprintf('%03d/%03d: Abhängigkeit %s kopiert\n', i, length(fList), fname);
