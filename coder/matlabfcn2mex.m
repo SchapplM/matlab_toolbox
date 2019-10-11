@@ -64,6 +64,9 @@ if nargin < 5
 else
   assert(isa(skiponerror,'logical') && all(size(force) == [1 1])); 
 end
+if launchreport
+  notmp = false; % Wenn man den Report sehen will, darf nicht gelöscht werden
+end
 Fehlercode = 0;
 %% Kompilierung
 % Zu kompilierende Dateien in der richtigen Reihenfolge (!)
