@@ -8,16 +8,15 @@
 %   Matrix mit Start- und Endindizes
 % 
 % Ausgabe:
-% struct_new
-%   Struktur, die die Signale der beiden Eingangsstrukturen
-%   aneinandergehängt enthält
+% struct_out
+%   Struktur, die nur die über Indizes ausgewählten Zeitbereiche enthält
 
 % Moritz Schappler, schappler@irt.uni-hannover.de, 2016-04
 % (c) Institut für Regelungstechnik, Universität Hannover
 
 function struct_out = timestruct_select(struct_in, I_SE)
 struct_out = struct_in;
-% Gehe alle Felder durch und hänge alle Felder an
+% Gehe alle Felder durch und wähle die Zeitbereiche mit den Indizes aus
 for fn = fieldnames(struct_in)'
   struct_out.(fn{1}) = [];
   tmp = struct_in.(fn{1});
