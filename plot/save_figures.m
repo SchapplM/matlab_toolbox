@@ -3,8 +3,9 @@
 % Argument 2: Cell mit Formaten, in denen die Bilder gespeichert werden.
 % Argument 3: Anfangsteil des Dateinamens
 
+% (C) Moritz Schappler, moritz.schappler@imes.uni-hannover.de, 2012
 
-function Bilder_Speichern(Pfad, Formate, praefix)
+function save_figures(Pfad, Formate, praefix)
 
 %     if ~isempty(varargin)
 %         Pfad = varargin{1};
@@ -53,8 +54,8 @@ function Bilder_Speichern(Pfad, Formate, praefix)
         %% Speichere
         dateiname = str2filename(sprintf('%s%s', praefix, Titel));
         
-        for i=1:length(Formate)
-            saveas(hdl, fullfile(Pfad, [dateiname, '.', Formate{i}]), Formate{i});
+        for j=1:length(Formate)
+            saveas(hdl, fullfile(Pfad, [dateiname, '.', Formate{j}]), Formate{j});
         end
         fprintf('figure %3d (%s) nach %s gespeichert\n', hdl.Number, hdl.Name, fullfile(Pfad, dateiname));
     end

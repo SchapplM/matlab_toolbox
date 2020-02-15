@@ -15,7 +15,7 @@
 % Alexander Tödtheide toedtheide@irt.uni-hannover.de, 2015-06
 % (C) Institut für Regelungstechnik, Leibniz Universität Hannover
 
-function set_YAutoscale(obj_handle, scale, enable_round)
+function set_y_autoscale(obj_handle, scale, enable_round)
 
 
 if strcmp(get(obj_handle, 'type'), 'figure')

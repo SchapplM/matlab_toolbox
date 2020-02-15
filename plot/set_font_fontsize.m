@@ -1,10 +1,9 @@
-function set_FontFontsize(fig_handle,FontName,FontSize)
-
 % Die Schriftart und Schriftgröße für alle Plots und Subplots ändern
 
 % Alexander Tödtheide toedtheide@irt.uni-hannover.de, 2015-06
-% (c) Institut für Regelungstechnik, Leibniz Universität Hannover
-% shape = [4,2];
+% (C) Institut für Regelungstechnik, Leibniz Universität Hannover
+
+function set_font_fontsize(fig_handle,FontName,FontSize)
 
 ha1 = findobj(fig_handle,'Type','axes');
 for i = 1:length(ha1)   

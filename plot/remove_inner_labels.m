@@ -1,6 +1,6 @@
 % Innere Tick labels entfernen
 
-% input
+% Input:
 % axhdl
 %   Handle zu axis-Objekten
 % flag [1x1]
