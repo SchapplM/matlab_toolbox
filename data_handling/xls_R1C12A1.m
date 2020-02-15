@@ -5,4 +5,4 @@
 % (c) Institut für Regelungstechnik, Universität Hannover
 
 function A1_String = xls_R1C12A1(ZeileNr, SpalteNr)
-A1_String = sprintf('%s%d', cell2str(ExcelCol(SpalteNr)), ZeileNr);
+A1_String = sprintf('%s%d', xlscol(SpalteNr), ZeileNr);
