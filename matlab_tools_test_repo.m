@@ -11,6 +11,7 @@ addpath(fullfile(this_repo_path, 'examples_tests'));
 
 example_fft_filtering
 example_figure_format
+test_mathematics_functions
 
 clc
 close all
