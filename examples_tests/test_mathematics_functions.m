@@ -12,7 +12,7 @@ test_angles = [-2*pi, -pi, -pi/2, -pi/4, 0, pi/4, pi/2, pi, 2*pi];
 
 %% Test normalize_angle for different cases
 
-expected_outcomes = [0, pi, -pi/2, -pi/4, 0, pi/4, pi/2, pi, 0];
+expected_outcomes = [0, -pi, -pi/2, -pi/4, 0, pi/4, pi/2, -pi, 0];
 angles_norm = normalize_angle(test_angles);
 assert(all(expected_outcomes==angles_norm), ...
   'normalized angles do not match expected outcome');

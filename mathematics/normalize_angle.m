@@ -1,4 +1,4 @@
-% Bring Angle into (-pi, pi]
+% Bring Angle into [-pi, pi)
 % 
 % Input:
 % theta [arbitrary dimension]
@@ -8,6 +8,9 @@
 % theta_n [dimension of input]
 %   Normalized angle [rad]
 % 
+% See also: 
+% wrapToPi from mathworks (not supported for code generation); uses [-pi, pi]
+% normalizeAngle from geom2d; also uses [-pi,pi), but has two arguments
 
 % Moritz Schappler, schappler@irt.uni-hannover.de, 2014-09
 % (C) Institut für Regelungstechnik, Leibniz Universität Hannover
@@ -22,14 +25,7 @@ assert(isa(theta,'double') && isreal(theta), ...
 %% Calculate
 theta_n = theta;
 
-for i = 1:length(theta(:))
-    % Check if Angle is already in (-pi, pi]
-    if theta(i) <= pi && theta(i) > -pi
-        theta_n(i) = theta(i);
-        continue;
-    end
-
-    % Add 2pi to bring the angle into (-pi, pi]
-    N = theta(i)/(2*pi);
-    theta_n(i) = theta(i) - round(N)*2*pi;
-end
+% Check if Angle is already in [-pi, pi)
+I_new = (theta < -pi) | (theta >= pi);
+% Add 2pi to bring the angle into [-pi, pi)
+theta_n(I_new) = mod(theta(I_new)+pi, 2*pi)-pi;
