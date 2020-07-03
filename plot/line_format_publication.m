@@ -62,8 +62,10 @@ for i = 1:length(linhdl)
     Y = get(linhdl(i), 'YDATA');
     % Indizes zur Auswahl der Zeitpunkte für das Setzen der Marker
     I_Ausw = round(linspace(1, length(X), format{i,4})); % Indizes zur Auswahl: Alle 25 Datenpunkte ein Marker
-    % Nur die Marker plotten
-    h = plot(X(I_Ausw), Y(I_Ausw), format{i,2}, 'Color', format{i,1});
+    % Handle des Axis-Objekts herausfinden, um die Marker dort zu plotten
+    ax = get(linhdl(i), 'Parent');
+    % Nur die Marker plotten (axis-Objekt muss nicht im Fokus (gca) sein)
+    h = plot(ax, X(I_Ausw), Y(I_Ausw), format{i,2}, 'Color', format{i,1});
     set(h, 'DisplayName', sprintf('%s: Marker', displaynames{i}));
     % Nichts plotten, Leeren Plot für Legendeneintrag erzeugen
     leghdl(i) = plot(NaN, NaN, [format{i,2}, format{i,3}], 'Color', format{i,1}); % Für Legende
