@@ -12,9 +12,10 @@
 % Moritz Schappler, moritz.schappler@imes.uni-hannover.de, 2019-08
 % (C) Institut für Mechatronische Systeme, Universität Hannover
 
-function change_current_figure(h)
+function h_out = change_current_figure(h)
 try
   set(0,'CurrentFigure',h);
+  h_out = h;
 catch
-  figure(h);
+  h_out = figure(h);
 end
