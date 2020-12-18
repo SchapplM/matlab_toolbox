@@ -2,11 +2,11 @@
 % Dient zum schnellen Ausgeben von Ergebnissen
 % 
 % Beispiele:
-% ['[',disp_vector((1:5), '%1.1f'),']']
-% ['[',disp_vector((10:-1:3)', '%1.0f'),']']
+% ['[',disp_array((1:5), '%1.1f'),']']
+% ['[',disp_array((10:-1:3)', '%1.0f'),']']
 
 % Moritz Schappler, schappler@imes.uni-hannover.de, 2018-03
-% (C) Institut für mechatronische Systeme, Universität Hannover
+% (C) Institut für Mechatronische Systeme, Leibniz Universität Hannover
 
 function s = disp_array(x, format)
 s = '';
@@ -18,9 +18,12 @@ for i = 1:size(x, 1)
         if j>1
             s = [s, ', ']; %#ok<AGROW>
         end
-        % Pr�fe, ob Variable symbolisch oder Zahl ist
+        % Prüfe, ob Variable symbolisch, cell-array oder Zahl ist.
+        % Bei Cell wird angenommen, dass der Inhalt ein String ist.
         if isa(x(i, j), 'sym') || nargin == 1
             s = [s, char(x(i, j))]; %#ok<AGROW>
+        elseif isa(x(i, j), 'cell')
+            s = [s, '''', x{i, j}, '''']; %#ok<AGROW>
         else
             s = [s, sprintf(format, x(i, j))]; %#ok<AGROW>
         end

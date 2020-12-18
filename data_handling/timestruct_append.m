@@ -23,7 +23,7 @@ struct_new = struct_old;
 
   
 % Verschiebe die Zeit der anzuhängenden Daten
-if nargin > 2 && isfield(struct_append, 't')
+if nargin > 2 && isfield(struct_append, 't') && ~isempty(timeshift)
   struct_append.t = struct_append.t + timeshift;
 end
 
