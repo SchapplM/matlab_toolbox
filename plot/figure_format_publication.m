@@ -1,27 +1,38 @@
 % Bilder gemäß Vorgaben für IEEE-Konferenz formatieren
 % 
 % Eingabe:
-% axhdl
-%   handles zu den axis-Elementen des aktuellen figure
+% hdl
+%   handles von axis- oder figure-Objekten (optional)
 
 % Moritz Schappler, schappler@irt.uni-hannover.de, 2015-06
 % (c) Institut für Regelungstechnik, Leibniz Universität Hannover
 
-function figure_format_publication(axhdl)
-
+function figure_format_publication(hdl)
+axhdl = [];
 if nargin == 0
-  axhdl = gca;
+  fighdl = gcf;
+elseif strcmp(get(hdl,'Type'), 'figure')
+  fighdl = hdl;
+elseif strcmp(get(hdl,'Type'), 'axes')
+  fighdl = gcf;
+  axhdl = hdl;
+else
+  error('undefined input');
+end
+
+if isempty(axhdl)
+  fch = get(fighdl, 'children');
+  axhdl = fch(strcmp(get(fch,'Type'),'axes'));
 end
 
 for i = 1:length(axhdl(:))
-  
   axes(axhdl(i)); %#ok<LAXES>
 
   % Ticklabels formatieren
   set(gca, 'FontSize', 8);
   set(gca, 'FontName', 'times');
   % Achsenbeschriftung formatieren
-  for label = {'XLABEL', 'YLABEL', 'ZLABEL'}
+  for label = {'XLABEL', 'YLABEL', 'ZLABEL', 'TITLE'}
     h = get(gca, cell2str(label));
     % 8pt Times new roman
     set(h, 'FontSize', 8);
@@ -47,7 +58,9 @@ for i = 1:length(axhdl(:))
   end
 end
 
-
-
 % Weißer Hintergrund
 set(gcf,'color','w');
+
+% sgtitle formatieren
+txthdl = fch(strcmp(get(fch,'Type'),'subplottext'));
+set(txthdl, 'FontName', 'Times');
