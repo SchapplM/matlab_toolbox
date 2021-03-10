@@ -15,12 +15,13 @@ function change_plot_data_scale(axhdl, xyz_scale)
 
 % loop through all axis
 for i = 1:length(axhdl)
-  % Finde Handle zu line und stair-Plots
+  % Finde Handle zu line-, bar- und stair-Plots
   linhdl = findobj(axhdl(i),'type','Line'); 
   Istair = false(length(linhdl),1);
   % Stair müssen separat behandelt werden, da keine z-Eigenschaft.
   linhdl = [linhdl;findobj(axhdl(i),'type','Stair')]; %#ok<AGROW>
   Istair = [Istair; true(length(linhdl)-length(Istair),1)]; %#ok<AGROW>
+  barhdl = findobj(axhdl(i),'type','Bar'); 
   % loop through all lines
   for j = 1:length(linhdl)
     % Skaliere Daten in dieser-Achse
@@ -34,5 +35,15 @@ for i = 1:length(axhdl)
       zdata = get(linhdl(j), 'ZDATA');
       set(linhdl(j), 'ZDATA', zdata*xyz_scale(3));
     end
+  end
+  % loop through all bars
+  for j = 1:length(barhdl)
+    if xyz_scale(1) ~= 1
+      error('Scaling x axes for bar plots not implemented yet');
+    end
+    ydata = get(barhdl(j), 'YData');
+    yendpoints = get(barhdl(j), 'YEndPoints');
+    set(barhdl(j), 'YData', ydata*xyz_scale(2));
+%     set(barhdl(j), 'YEndPoints', yendpoints*xyz_scale(2));
   end
 end
