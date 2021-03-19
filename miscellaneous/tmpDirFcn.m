@@ -5,7 +5,7 @@
 %   Create the generated directory
 %   Default: 1
 % wechseln [1x1] bool
-%   swtich to this directory
+%   switch to this directory
 %   Default: 0
 % gesamtpfad [1x1] bool
 %   add this directory to the Matlab Path
@@ -28,24 +28,8 @@ if nargin<1
     erschaffen = 1;
 end
 
-%% Determine Operating System
-WINDOWS = 1;
-LINUX = 2;
-
-if ~isempty(strfind(computer, 'GLNX'))
-  OS = LINUX;
-elseif ~isempty(strfind(computer, 'WIN'))
-  OS = WINDOWS;
-else
-  error('could not determine the operating system');
-end
-
 %% Generate Name of Directory
-if OS == WINDOWS
-  TempPfad = fullfile(getenv( 'TEMP' ) , 'Matlab');
-elseif OS == LINUX
-  TempPfad = fullfile('/tmp/' , 'Matlab');
-end
+TempPfad = fullfile(tempdir() , 'Matlab');
 SET = char(['A':'Z' 'a':'z' '0':'9']) ;
 NSET = length(SET) ;
 N = 5 ; % pick N numbers

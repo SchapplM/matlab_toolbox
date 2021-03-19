@@ -1,5 +1,5 @@
 function mkdirs(directory)
 
-if ~exist(directory, 'file')
+if ~isfolder(directory)
   mkdir(directory);
 end

@@ -43,8 +43,9 @@ vidObj = VideoReader(videofile_avi);
 FrameMask = false(vidObj.Height, vidObj.Width); % pixels to select have a 1
 while hasFrame(vidObj) % read video frame by frame
   vF = readFrame(vidObj);
-  % Get non-white pixels and add them to the mask
-  pxlNonWhite = ~(vF(:,:,1)==255 & vF(:,:,2)==255 & vF(:,:,3)==255);
+  % Get non-white pixels and add them to the mask. Assume threshold of 253
+  % for RGB values instead of 255. Necessary when AVI is created from PNG.
+  pxlNonWhite = ~(vF(:,:,1)>=253 & vF(:,:,2)>=253 & vF(:,:,3)>=253);
   FrameMask = FrameMask | pxlNonWhite;
 end
 % Determine the cropping borders from the Mask
