@@ -39,7 +39,7 @@
 % `doc codegen`
 
 % Moritz Schappler, moritz.schappler@imes.uni-hannover.de, 2013-08
-% (C) Institut für mechatronische Systeme, Universität Hannover
+% (C) Institut für Mechatronische Systeme, Leibniz Universität Hannover
 
 function Fehlercode = matlabfcn2mex(KompDat, launchreport, notmp, force, skiponerror)
 
@@ -181,12 +181,16 @@ for i = 1:length(KompDat)
     aktpfad = pwd;
     cd(mdat_pfad);
     % .mexw32/.mexw64 kompilieren
-    %try
-    cmdstring = sprintf('codegen %s -v -o ''%s''', ...
-       mdat_name, fullfile(mdat_pfad, mexdat_name));
+    cmdstring = 'codegen';
     if nargin >1 && launchreport
       cmdstring = [cmdstring, ' -launchreport'];%#ok<AGROW> % (erstellt einen Report auch bei Erfolg)
+    else
+      % Zum Unterdrücken der Nachricht "Code generation successful"
+      cmdstring = [cmdstring, ' -silent']; %#ok<AGROW>
     end
+    cmdstring = [cmdstring, sprintf(' %s -o ''%s''', ...
+       mdat_name, fullfile(mdat_pfad, mexdat_name))]; %#ok<AGROW>
+
     % Suche Beispiel-Übergabeargumente; gekennzeichnet durch %$cgargs
     % Damit ist es nicht mehr notwendig, die Übergabeargumente mit
     % isa(x,'double') zu kennzeichnen, was symbolische Eingaben unmöglich
@@ -238,9 +242,6 @@ for i = 1:length(KompDat)
       end
     end
     cd(aktpfad); % in vorheriges Verzeichnis zurückwechseln
-    %catch %#ok<CTCH>
-        %fprintf('Fehler bei der Erstellung. Dauer %1.1f s\n', toc(t1));
-    %end
 end
 
 
