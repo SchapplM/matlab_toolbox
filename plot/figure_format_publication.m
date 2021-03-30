@@ -23,6 +23,9 @@ end
 if isempty(axhdl)
   fch = get(fighdl, 'children');
   axhdl = fch(strcmp(get(fch,'Type'),'axes'));
+else
+  % Es ist kein Figure-Handle gegeben, also kein Kind-Elemente bestimmbar
+  fch = [];
 end
 
 for i = 1:length(axhdl(:))
@@ -71,5 +74,7 @@ end
 set(fighdl,'color','w');
 
 % sgtitle formatieren
-txthdl = fch(strcmp(get(fch,'Type'),'subplottext'));
-set(txthdl, 'FontName', 'Times');
+if ~isempty(fch)
+  txthdl = fch(strcmp(get(fch,'Type'),'subplottext'));
+  set(txthdl, 'FontName', 'Times');
+end
