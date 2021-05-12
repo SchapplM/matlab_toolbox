@@ -185,8 +185,15 @@ for i = 1:length(KompDat)
     if nargin >1 && launchreport
       cmdstring = [cmdstring, ' -launchreport'];%#ok<AGROW> % (erstellt einen Report auch bei Erfolg)
     else
-      % Zum Unterdrücken der Nachricht "Code generation successful"
-      cmdstring = [cmdstring, ' -silent']; %#ok<AGROW>
+      % Zum Unterdrücken der Nachricht "Code generation successful".
+      % Tritt nur bei Versionen R2021a oder neuer auf. Erzeuge
+      % Matlab-Versionszahl (Typ "9.10" ist nicht brauchbar, da seit R2021a
+      % zweistellige zweite Versionsnummer, schlecht für Vergleich).
+      [tokens] = regexp(version('-release'), '(\d+)([ab])', 'tokens');
+      vnum = str2double(tokens{1}{1}) + (tokens{1}{2}=='b')*0.5;
+      if vnum >= 2021.0 % Nur bei R2020a oder neuer
+        cmdstring = [cmdstring, ' -silent']; %#ok<AGROW>
+      end
     end
     cmdstring = [cmdstring, sprintf(' %s -o ''%s''', ...
        mdat_name, fullfile(mdat_pfad, mexdat_name))]; %#ok<AGROW>
