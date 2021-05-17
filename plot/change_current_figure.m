@@ -16,6 +16,9 @@ function h_out = change_current_figure(h)
 try
   set(0,'CurrentFigure',h);
   h_out = h;
+  if nargout > 0 && ~isa(h,'handle')
+    h_out = gcf(); % Ausgabe muss echtes handles sein
+  end
 catch
   h_out = figure(h);
 end

@@ -78,3 +78,8 @@ if ~isempty(fch)
   txthdl = fch(strcmp(get(fch,'Type'),'subplottext'));
   set(txthdl, 'FontName', 'Times');
 end
+% colorbar formatieren
+if ~isempty(fch)
+  cbhdl = fch(strcmp(get(fch,'Type'),'colorbar'));
+  set(cbhdl, 'FontName', 'Times', 'FontSize', 8);
+end
