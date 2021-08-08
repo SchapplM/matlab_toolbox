@@ -202,25 +202,7 @@ for i = 1:length(KompDat)
     % Damit ist es nicht mehr notwendig, die Übergabeargumente mit
     % isa(x,'double') zu kennzeichnen, was symbolische Eingaben unmöglich
     % macht.
-    fid = fopen(fullfile(mdat_pfad, [mdat_name, suffix_m]),'r');
-    tline = fgetl(fid);
-    cga_found = false;
-    cga_line = '';
-    while ischar(tline)
-      if contains(tline, '%$cgargs')
-        if ~cga_found % erstes Vorkommnis
-          cga_line = tline(9:end);
-          cga_found = true;
-        else % mehrzeilig
-          cga_line = [cga_line, tline(9:end)]; %#ok<AGROW>
-        end
-      elseif cga_found
-        % Der (mehrzeilige) Kommentar ist vorbei
-        break;
-      end
-      tline = fgetl(fid);
-    end
-    fclose(fid);
+    cga_line = coder_gen_cgargs(fullfile(mdat_pfad, [mdat_name, suffix_m]));
     if ~isempty(cga_line)
       cmdstring = [cmdstring, ' -args ', cga_line]; %#ok<AGROW>
     end
