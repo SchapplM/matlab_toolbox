@@ -103,11 +103,11 @@ for i = 1:size(yData, 2)
 end
 hold off
 
-space = max(yData) - min(yData);
-limits.ymin            = min(yData) - space * 0.1;
-limits.ymax            = max(yData) - space * 0.2;    
-limits.xmin            = min(xData);
-limits.xmax            = max(xData);
+space = max(yData, [],'all') - min(yData, [],'all');
+limits.ymin            = min(yData, [],'all') - space * 0.1;
+limits.ymax            = max(yData, [],'all') + space * 0.1;    
+limits.xmin            = min(xData, [],'all');
+limits.xmax            = max(xData, [],'all');
 
 achsen.a.XLim        = [limits.xmin limits.xmax];
 achsen.a.YLim        = [limits.ymin limits.ymax];
@@ -121,18 +121,9 @@ if ~isempty(DataName)
 legenden.l            = legend(DataName);
 legenden.l.Units      = 'centimeters';
 legenden.l.Position   = [10.2 1.8 0 0];
-legenden.l.Location   = LegendPosition{LegendPos};
+legenden.l.Location   = LegendPos;
 
 legenden.l.Box        = 'off';
 end
 
-
-
-%% Speichern und exportieren
-% filename = 'template_einfach';
-% set(gcf,'PaperPositionMode','auto');
-% print('-depsc',[filename,'_tmp.eps']); %Ausgabe als .eps
-% system(['gswin32c.exe -dNOPAUSE -dBATCH -dNOCACHE -dEPSCrop -sDEVICE=epswrite -sOutputFile=',filename,'.eps ',filename,'_tmp.eps']);
-% system(['gswin32c.exe -dNOPAUSE -dBATCH -dNOCACHE -dEPSCrop -sDEVICE=pdfwrite -sOutputFile=',filename,'.pdf ',filename,'_tmp.eps']);
-% system(['gswin32c.exe -dNOPAUSE -dBATCH -dNOCACHE -r300 -dEPSCrop -sDEVICE=png16m   -sOutputFile=',filename,'.png ',filename,'_tmp.eps']);
 
