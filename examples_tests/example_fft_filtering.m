@@ -9,7 +9,10 @@
 % (C) Institut für mechatronische Systeme, Universität Hannover
 
 clear; close all; clc
-
+if isempty(which('hamming'))
+  warning('Signal Processing Toolbox nicht installiert. Test nicht durchführbar');
+  return
+end
 %% Generate data
 
 t_smpl = 1e-3;
