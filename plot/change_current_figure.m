@@ -8,11 +8,16 @@
 %   definierten Wert gesetzt werden).
 % invisible (true/false)
 %   Erzeuge das Bild unsichtbar, falls es noch nicht existiert.
+%   Dadurch ist die Nummer des Figure-Objekts eine andere
+% 
+% Ausgabe:
+% h_out
+%   Nummer des erzeugten Figure-Handles (kann abweichen)
 
 % https://stackoverflow.com/questions/8488758/inhibit-matlab-window-focus-stealing
 
 % Moritz Schappler, moritz.schappler@imes.uni-hannover.de, 2019-08
-% (C) Institut für Mechatronische Systeme, Universität Hannover
+% (C) Institut für Mechatronische Systeme, Leibniz Universität Hannover
 
 function h_out = change_current_figure(h, invisible)
 if nargin < 2
@@ -26,7 +31,7 @@ try
   end
 catch
   if invisible
-    h_out = figure_invisible(h);
+    h_out = figure_invisible();
   else
     h_out = figure(h);
   end
