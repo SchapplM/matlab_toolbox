@@ -34,25 +34,48 @@ if size(x,2) == 1 % time plot
   end
   I(end) = true; % always keep last value to not cut the line length
 elseif size(x,2) == 2 % xy plot
-  % for all data points check distance to next point to the left and down
+  % for all data points check distance to next point
   I = true(length(x),1); % start with all markers active
-  % Sort all markers to start from the bottom left and go top right by mean
-  % of distance to that corner (weighted by the thresholds)
-  [~, I_sortx] = sort( ((x(:,1)-min(x(:,1)))/xthresh).^2 + ...
-                       ((x(:,2)-min(x(:,2)))/ythresh).^2);
-  for kk = I_sortx'
-    % Index for current point kk (to exclude from distance measurement)
-    I_self = false(length(x),1); I_self(kk) = true;
-    % Select all left and downward markers
-    I_left = x(:,1) <= x(kk,1);
-    I_down = x(:,2) <= x(kk,2);
-    % Distance of all existing markers left and down to this one. If this
-    % one is within the threshold distance to an existing one, delete it.
-    I_check = I & I_left & I_down & ~I_self;
-    I_in_thr = abs(x(I_check,1)-x(kk,1))<xthresh & ...
-               abs(x(I_check,2)-x(kk,2))<ythresh;
-    if any(I_in_thr)
-      I(kk) = false; % disable current marker
+  % Sort all markers according to both dimensions
+  [~, I_sortx] = sort(x(:,1));
+  [~, I_sorty] = sort(x(:,2));
+  % Loop over different search directions
+  for jdim = 1:4
+    switch jdim
+      case 1 % go right
+        Isort = I_sortx;
+      case 2 % go left
+        Isort = flipud(I_sortx);
+      case 3 % go up
+        Isort = I_sorty;
+      case 4 % go down
+        Isort = flipud(I_sorty);
+    end
+    for kk = Isort'
+      if ~I(kk), continue; end % marker already disabled. Skip.
+      % Index for current point kk (to exclude from distance measurement)
+      I_self = false(length(x),1); I_self(kk) = true;
+      % Select all markers in a specific search direction. Look in
+      % direction that is not the processing direction to avoid deleting
+      % the markers one after the other
+      switch jdim
+        case 1 % look left-down
+          I_prev = x(:,1) <= x(kk,1) & x(:,2) <= x(kk,2);
+        case 2 % look right up
+          I_prev = x(:,1) >= x(kk,1) & x(:,2) >= x(kk,2);
+        case 3 % look right down
+          I_prev = x(:,1) >= x(kk,1) & x(:,2) <= x(kk,2);
+        case 4 % look left up
+          I_prev = x(:,1) <= x(kk,1) & x(:,2) >= x(kk,2);
+      end
+      % Distance of all existing markers relative in search direction. If this
+      % one is within the threshold distance to an existing one, delete it.
+      I_check = I & ~I_self & I_prev;
+      I_in_thr = abs(x(I_check,1)-x(kk,1))<xthresh & ...
+                 abs(x(I_check,2)-x(kk,2))<ythresh;
+      if any(I_in_thr)
+        I(kk) = false; % disable current marker
+      end
     end
   end
 else
