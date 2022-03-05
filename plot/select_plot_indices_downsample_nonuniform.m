@@ -35,7 +35,7 @@ if size(x,2) == 1 % time plot
   I(end) = true; % always keep last value to not cut the line length
 elseif size(x,2) == 2 % xy plot
   % for all data points check distance to next point
-  I = true(length(x),1); % start with all markers active
+  I = true(size(x,1),1); % start with all markers active
   % Sort all markers according to both dimensions
   [~, I_sortx] = sort(x(:,1));
   [~, I_sorty] = sort(x(:,2));
@@ -51,10 +51,8 @@ elseif size(x,2) == 2 % xy plot
       case 4 % go down
         Isort = flipud(I_sorty);
     end
-    for kk = Isort'
+    for kk = Isort(I)'
       if ~I(kk), continue; end % marker already disabled. Skip.
-      % Index for current point kk (to exclude from distance measurement)
-      I_self = false(length(x),1); I_self(kk) = true;
       % Select all markers in a specific search direction. Look in
       % direction that is not the processing direction to avoid deleting
       % the markers one after the other
@@ -68,13 +66,25 @@ elseif size(x,2) == 2 % xy plot
         case 4 % look left up
           I_prev = x(:,1) <= x(kk,1) & x(:,2) >= x(kk,2);
       end
+      if ~any(I_prev)
+        I(kk) = false; % disable current marker
+        continue
+      end
       % Distance of all existing markers relative in search direction. If this
       % one is within the threshold distance to an existing one, delete it.
-      I_check = I & ~I_self & I_prev;
+      I_check = I & I_prev;
+      % Index for current point kk (to exclude from distance measurement)
+      I_check(kk) = false;
       I_in_thr = abs(x(I_check,1)-x(kk,1))<xthresh & ...
                  abs(x(I_check,2)-x(kk,2))<ythresh;
       if any(I_in_thr)
         I(kk) = false; % disable current marker
+      else
+        % marker is set as enabled. Disable all other markers around this
+        I_all_in_thr = abs(x(:,1)-x(kk,1))<xthresh & ...
+                       abs(x(:,2)-x(kk,2))<ythresh;
+        I_all_in_thr(kk) = false; % not this one
+        I(I_all_in_thr) = false;
       end
     end
   end
