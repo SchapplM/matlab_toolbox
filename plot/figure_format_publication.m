@@ -66,6 +66,7 @@ for i = 1:length(axhdl(:))
   for j = 1:length(ch)
     if strcmp(get(ch(j), 'type'), 'text')
       set(ch(j), 'FontName', 'times');
+      set(ch(j), 'FontSize', 8);
     end
   end
 end
