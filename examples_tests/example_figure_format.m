@@ -77,4 +77,7 @@ for i = 1:length(axhdl(:))
   leghdl = line_format_publication(linhdl, format{i}, Names{i});
   legend(leghdl, Names{i});
 end
-export_fig(fullfile(figure_save_path, 'example_out_2.pdf'));
+export_fig(fig_handle, fullfile(figure_save_path, 'example_out_2_expfig.pdf'));
+exportgraphics(fig_handle, fullfile(figure_save_path, 'example_out_2_expgraph.pdf'),...
+  'ContentType','vector');
+exportgraphics(fig_handle, fullfile(figure_save_path, 'example_out_2_r300.png'));
