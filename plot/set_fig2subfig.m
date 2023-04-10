@@ -45,13 +45,17 @@ end
 figure(figHandle);
 for i = 1:n_rows
   for j = 1:n_cols
-    %create new figure
+    % create new figure
     sphdl = subplot(n_rows,n_cols,sprc2no(n_rows,n_cols,i,j)); %create and get handle to the subplot axes
     copyobj(get(ax(i,j),'children'), sphdl);
     axhdl(i,j) = sphdl;
-    % TODO: Merkmale des Axis-Objektes mitkopieren
-    % set(axhdl(i,j), 'ylabel', get(ax(i,j), 'ylabel'))
-    % set(axhdl(i,j), 'title', get(ax(i,j), 'title'))
+    % Merkmale des Axis-Objektes mitkopieren
+    proplist = {'xlabel', 'ylabel', 'zlabel', 'title', 'FontName', 'FontSize', ...
+      'GridAlpha', 'GridAlphaMode', 'GridColor', 'GridColorMode', 'GridLineStyle', ...
+      'XGrid', 'YGrid', 'XScale', 'YScale', 'Box', 'BoxStyle'};
+    for k = 1:length(proplist)
+      set(axhdl(i,j), proplist{k}, get(ax(i,j), proplist{k}));
+    end
   end
 end
 

@@ -9,6 +9,10 @@
 %   case 2: two reference coordinates (xy plot)
 % y [N x M]
 %   signal values
+% xthresh, ythresh
+%   Thresholds for removing markers
+% logscales [2x1]
+%   true, if the x or y axis is scaled logarithmically
 % 
 % Output:
 % I [N x 1 logical]
@@ -17,15 +21,23 @@
 % Moritz Schappler, moritz.schappler@imes.uni-hannover.de, 2022-02
 % (C) Institut für Mechatronische Systeme, Leibniz Universität Hannover
 
-function I = select_plot_indices_downsample_nonuniform(x, y, xthresh, ythresh)
-
+function I = select_plot_indices_downsample_nonuniform(x, y, xthresh, ...
+  ythresh, logscales)
+if nargin < 5
+  logscales = false(2,1);
+end
 if size(x,2) == 1 % time plot
   I = false(length(x),1);
   last_x = inf;
   last_y = inf(1,size(y,2));
   for kk = 1:size(y,1)-1
-    if abs(x(kk)-last_x) > xthresh || ... % x threshold exceeded
-        any(abs(y(kk,:)-last_y)>ythresh) % any of the y thresholds exceeded
+    if ~logscales(1), I_x_exc = abs(x(kk)-last_x) > xthresh;
+    else,             I_x_exc = isinf(last_x) || abs(x(kk)/last_x) > xthresh;
+    end
+    if ~logscales(2), I_y_exc = any(abs(y(kk,:)-last_y)>ythresh);
+    else,             I_y_exc = isinf(last_y) || any(abs(y(kk,:)/last_y)>ythresh);
+    end
+    if I_x_exc || I_y_exc... % x or y threshold exceeded
       % Change in data is high enough. Plot next point.
       I(kk) = true;
       last_x = x(kk);
