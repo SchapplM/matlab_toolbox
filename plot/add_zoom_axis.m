@@ -30,9 +30,15 @@ xlh = get(newaxhdl, 'xlabel');
 set(xlh, 'String', '');
 ylh = get(newaxhdl, 'ylabel');
 set(ylh, 'String', '');
+set(newaxhdl, 'xtick', get(axhdl, 'xtick'));
+set(newaxhdl, 'ytick', get(axhdl, 'ytick'));
 set(newaxhdl, 'xticklabel', {});
 set(newaxhdl, 'yticklabel', {});
 set(newaxhdl, 'Box', 'on'); % Rand vollständig zeichnen
+% Rand nochmal dicker zeichnen (in das neue Zoom-Fenster)
+plot(newaxhdl, [zoomrange(1,1),zoomrange(1,1),zoomrange(1,2),...
+  zoomrange(1,2),zoomrange(1,1)],[zoomrange(2,1),zoomrange(2,2),...
+  zoomrange(2,2),zoomrange(2,1),zoomrange(2,1)], 'k-', 'LineWidth', 1);
 
 % Rahmen in bestehenden Plot einzeichnen
 boxhdl = plot(axhdl, [zoomrange(1,1),zoomrange(1,1),zoomrange(1,2),...
