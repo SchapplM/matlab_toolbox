@@ -64,6 +64,7 @@ end
 % Größe der axis-handles
 for ii = 1:n_rows
   for jj = 1:n_cols
+    if length(axhdl(:))>1 && isnan(axhdl(ii,jj)), continue; end
     % referred to the coordinate frame on the upper left corner
     x_frame = bl + (jj -1)*(b + bdx);
     y_frame =  1-hu -(ii -1)*(h + bdy)-h;
