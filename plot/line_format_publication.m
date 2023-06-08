@@ -17,6 +17,9 @@
 %     Markeranzahl (auf gesamte Datenreihe verteilt)
 %     Linienstärke (double)
 %     Markergröße (double)
+%     Versatz beim Starten und Stoppen der Marker (Prozent der Gesamtdaten).
+%     Wert sollte ca. 0.0 bis 0.1 sein und verhindert, dass am ersten Bahnpunkt
+%     viele Marker übereinander liegen.
 % displaynames
 %   Cell mit Namen, die als Displayname eingesetzt werden. Dadurch werden
 %   die Linien später besser erkannt.
@@ -50,6 +53,9 @@ end
 if size(format,2) < 6
   format = [format, repmat({default_markersize}, size(format,1), 1)];
 end
+if size(format,2) < 7
+  format = [format, repmat({0}, size(format,1), 1)];
+end
 if nargin < 3 || isempty(displaynames)
   displaynames = cell(length(linhdl),1);
   for i = 1:length(linhdl)
@@ -72,7 +78,7 @@ for i = 1:length(linhdl)
     Y = get(linhdl(i), 'YDATA');
     % Indizes zur Auswahl der Zeitpunkte für das Setzen der Marker
     % Alle x Datenpunkte ein Marker. Setzt gleichmäßige Daten voraus.
-    I_Ausw = round(linspace(1, length(X), format{i,4}));
+    I_Ausw = round(linspace(1+format{i,7}*length(X), length(X)-format{i,7}*length(X), format{i,4}));
     if ~isempty(which('knnsearch')) % Falls Toolbox installiert ist
       % Finde Stützstellen für nicht gleichmäßige Daten (besser)
       I_Ausw = knnsearch(X', (X(1)+(X(end)-X(1))*I_Ausw/length(X))');
