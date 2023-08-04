@@ -49,6 +49,15 @@ for i = 1:length(axhdl(:))
       hh = axchch(kk);
       set(hh, 'FontSize', 8);
       set(hh, 'FontName', 'times');
+    elseif isa(axchch(kk), 'cell')
+      axchcell = axchch(kk);
+      for jjj = 1:length(axchcell{1})
+        if strcmp(get(axchcell{1}(jjj), 'Type'), 'text')
+          hh = axchcell{1}(jjj);
+          set(hh, 'FontSize', 8);
+          set(hh, 'FontName', 'times');
+        end
+      end
     end
   end
   % Achsen-Einteilungsbeschriftung formatieren
