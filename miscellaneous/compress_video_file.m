@@ -56,6 +56,9 @@ lastY = find(any(FrameMask'), 1, 'last');
 % Determine rectangle of the content to keep
 cr_orig = [lastX-firstX, lastY-firstY];
 cr = ceil(cr_orig/32)*32; %  (enlarge to fit mod32)
+% in case of no cropping (probably non-white background), crop to mod32.
+if cr(1) > vidObj.Width,  cr(1) = floor(cr_orig(1)/32)*32; end
+if cr(2) > vidObj.Height, cr(2) = floor(cr_orig(2)/32)*32; end
 % Determine point coordinates (top left corner of the rectangle)
 rp_orig = [firstX,firstY];
 % Move to top left to account for rounding the rectangle to mod32
