@@ -55,7 +55,11 @@ if ~isempty(sl_y)
   end
 end
 %% Gehe alle logsout-Signale durch und belege die Struktur
-sl_lo = simOut.get('logsout');
+if isfield(simOut, 'logsout')
+  sl_lo = simOut.get('logsout');
+else
+  sl_lo = [];
+end
 if ~isempty(sl_lo)
   Names = sl_lo.getElementNames;
   for j = 1:length(Names)
