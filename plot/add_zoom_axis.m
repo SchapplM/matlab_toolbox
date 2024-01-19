@@ -20,9 +20,18 @@ function [newaxhdl, boxhdl] = add_zoom_axis(axhdl, zoomrange)
 % Eingabe prüfen
 assert(all(size(zoomrange)==[2 2]), 'zoomrange muss 2x2 sein');
 assert(all(zoomrange(:,1)<zoomrange(:,2)), 'zoomrange muss min, max sein');
+if isa(axhdl, 'double')
+  % Eingabe wird nicht als Axis-Handle erkannt. Passiert, wenn bspw. die
+  % Axis-Handles von Subplots als Matrix gespeichert werden und dann
+  % indiziert werden.
+  axes(axhdl);
+  axhdl = gca();
+end
+hold(axhdl, 'on'); % Ohne hold on wird der komplette Inhalt durch die Box überschrieben
 % Kopie des bestehenden Objekts erzeugen
 fighdl = get(axhdl, 'parent');
 newaxhdl = copyobj(axhdl,fighdl);
+hold(newaxhdl, 'on'); % Ohne hold on wird der komplette Inhalt durch die Box überschrieben
 % Formatierung einstellen
 set(newaxhdl, 'xlim', zoomrange(1,:));
 set(newaxhdl, 'ylim', zoomrange(2,:));
