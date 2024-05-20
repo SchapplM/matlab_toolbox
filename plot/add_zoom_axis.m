@@ -31,6 +31,7 @@ hold(axhdl, 'on'); % Ohne hold on wird der komplette Inhalt durch die Box übers
 % Kopie des bestehenden Objekts erzeugen
 fighdl = get(axhdl, 'parent');
 newaxhdl = copyobj(axhdl,fighdl);
+
 hold(newaxhdl, 'on'); % Ohne hold on wird der komplette Inhalt durch die Box überschrieben
 % Formatierung einstellen
 set(newaxhdl, 'xlim', zoomrange(1,:));
