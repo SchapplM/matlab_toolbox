@@ -40,6 +40,11 @@ for fn = fieldnames(GesStruct)'
     % Speichere für jedes Feld aller Teilstrukturen die Dimension ab (prüfe
     % daraus später, wie die Dimension der Daten unabhängig von der Zeit ist)
     for fn3 = fieldnames(ResStructDim)'
+      % Struktur für Zusatz-Informationen ignorieren
+      if isa(ResStructDim.(fn3{1}), 'struct')
+        ResStructDim = rmfield(ResStructDim, fn3{1});
+        continue
+      end
       [d1, d2, d3] = size(ResStructDim.(fn3{1}));
       ResStructDim.(fn3{1}) = [d1 d2 d3];
     end
@@ -47,6 +52,7 @@ for fn = fieldnames(GesStruct)'
   end
   % Nicht die erste Teilstruktur, Dimensionen aller Felder anhängen
   for fn3 = fieldnames(GesStruct.(fn{1}))'
+    if isa(GesStruct.(fn{1}).(fn3{1}), 'struct'), continue; end
     [d1, d2, d3] = size(GesStruct.(fn{1}).(fn3{1}));
     ResStructDim.(fn3{1}) = [ResStructDim.(fn3{1}); [d1 d2 d3]];
   end
