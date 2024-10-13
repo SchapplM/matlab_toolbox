@@ -29,7 +29,7 @@
 % Fehlercode
 %   0: Kein Fehler
 %   1: Datei nicht gefunden
-%   2: Fehler beim kompilieren
+%   2-4: Fehler beim kompilieren
 % 
 % Beispiel: matlabfcn2mex({'rotx', 'roty', 'rotz'});
 
@@ -211,13 +211,41 @@ for i = 1:length(KompDat)
   % Befehl ausführen
   try  
     eval(cmdstring);
+    % Bestimme das Dateidatum für Plausibilitätsprüfung
+    [mexdat_pfad2, ~, suffix_mex] = fileparts(which(mexdat_name));
+    if isempty(mexdat_pfad2)
+      error('matlabfcn2mex:mex_not_created', 'Mex-Datei wurde beim Kompilier-Befehl nicht erstelt');
+    end
+    if ~strcmp(mexdat_pfad2, mdat_pfad)
+      error('matlabfcn2mex:mex_wrong_folder', 'Neue Mex-Datei liegt nicht im selben Ordner wie die m-Datei');
+    end
+    mexdat_DirInfo2 = dir(fullfile(mexdat_pfad2, [mexdat_name, suffix_mex]));
+    mexdat_date2 = mexdat_DirInfo2.datenum;
+    if mexdat_date ~= 0 && mexdat_date == mexdat_date2
+      warning(['Das Dateidatum der Mex-Datei hat sich nicht geändert: %s. ...' ...
+        'Lösche und kompiliere erneut.'], datestr(mexdat_date2, 'yyyy-mm-dd HH:MM:SS'));
+      delete(fullfile(mexdat_pfad, [mexdat_name, suffix_mex]));
+      mexdat_DirInfo3 = dir(fullfile(mexdat_pfad, [mexdat_name, suffix_mex]));
+      if ~isempty(mexdat_DirInfo3)
+        error('matlabfcn2mex:file_locked', 'Fehler beim Löschen der Datei. Eventuell gesperrt?');
+      end
+      eval(cmdstring);
+    end
   catch err
     if strcmp(err.identifier,'emlc:compilationError')
       fprintf('\tFehler beim Kompilieren\n');
       Fehlercode = 2;
+    elseif strcmp(err.identifier,'matlabfcn2mex:file_locked')
+      fprintf('\tDateizugriffsfehler beim Kompilieren\n');
+    elseif strcmp(err.identifier,'matlabfcn2mex:mex_not_created')
+      fprintf('\tDateifehler beim Kompilieren\n');
+      Fehlercode = 4;
+    elseif strcmp(err.identifier,'matlabfcn2mex:mex_wrong_folder')
+      fprintf('\tVerzeichnisfehler beim Kompilieren\n');
+      Fehlercode = 5;
     else
       warning('Unerwarteter Fehler beim Kompilieren: %s\n%s', err.identifier, err.message);
-      Fehlercode = 2;
+      Fehlercode = 6;
     end
   end
   fprintf('\tDauer: %1.1f s\n', toc(t1));
