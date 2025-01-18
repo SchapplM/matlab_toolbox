@@ -78,7 +78,7 @@ for i = 1:n_rows
     proplist = {'xlabel', 'ylabel', 'zlabel', 'title', 'FontName', 'FontSize', ...
       'GridAlpha', 'GridAlphaMode', 'GridColor', 'GridColorMode', 'GridLineStyle', ...
       'XGrid', 'YGrid', 'XScale', 'YScale', 'Box', 'BoxStyle', 'xlim', 'ylim', 'zlim', ...
-      'XDir', 'YDir', 'ZDir', 'Units'};
+      'XDir', 'YDir', 'ZDir', 'Units', 'Colormap', 'ColorScale'};
     for k = 1:length(proplist)
       set(axhdl(i,j), proplist{k}, get(ax(i,j), proplist{k}));
     end
@@ -92,6 +92,9 @@ for f = fighhdl_in(:)'
   for i = 1:length(fch)
     if any(fch(i) == ax(:))
       continue % ist schon das Haupt-Axis-Handle, das kopiert wurde
+    end
+    if strcmp(get(fch(i), 'Type'), 'colorbar')
+      continue
     end
     c = c + 1;
     other_hdl(c) = copyobj(fch(i), figHandle); %#ok<AGROW> 
