@@ -60,11 +60,17 @@ try %#ok<TRYNC>
   warning('on','MATLAB:ui:javaframe:PropertyToBeRemoved');
 end
 %% Größe setzen
-
 % Größe der axis-handles
 for ii = 1:n_rows
   for jj = 1:n_cols
-    if length(axhdl(:))>1 && isnan(axhdl(ii,jj)), continue; end
+    if length(axhdl(:))>1 && isa(axhdl(ii,jj), 'double') && isnan(axhdl(ii,jj))
+      warning(['Element (%d,%d) of the axhdl array is NaN. You should ' ...
+        'use gobjects to initialize the axhdl array.'], ii, jj);
+      continue;
+    end
+    if isa(axhdl(ii,jj), 'matlab.graphics.GraphicsPlaceholder')
+      continue;
+    end
     % referred to the coordinate frame on the upper left corner
     x_frame = bl + (jj -1)*(b + bdx);
     y_frame =  1-hu -(ii -1)*(h + bdy)-h;

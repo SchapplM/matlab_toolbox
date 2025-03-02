@@ -40,6 +40,8 @@ xlh = get(newaxhdl, 'xlabel');
 set(xlh, 'String', '');
 ylh = get(newaxhdl, 'ylabel');
 set(ylh, 'String', '');
+th = get(newaxhdl, 'title');
+set(th, 'String', '');
 set(newaxhdl, 'xtick', get(axhdl, 'xtick'));
 set(newaxhdl, 'ytick', get(axhdl, 'ytick'));
 set(newaxhdl, 'xticklabel', {});

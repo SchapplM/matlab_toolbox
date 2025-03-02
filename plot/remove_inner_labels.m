@@ -14,12 +14,28 @@
 % (c) Institut für Regelungstechnik, Universität Hannover
 
 function remove_inner_labels(axhdl,flag)
-
+if isa(axhdl, 'double')
+  warning('axhdl is of type double. You should use gobjects to initialize the axhdl array');
+end
 for i = 1:size(axhdl,1)
   for j = 1:size(axhdl,2)
-    last_row_in_col_j = find(~isnan(axhdl(:,j)), 1, 'last');
     ca = axhdl(i,j);
-    if isnan(ca), continue; end
+    last_row_in_col_j = 0;
+    if isa(axhdl(:,j), 'double')
+      if isnan(ca), continue; end
+      last_row_in_col_j = find(~isnan(axhdl(:,j)), 1, 'last');
+    else
+      for i_check = 1:size(axhdl,1)
+        if isa(axhdl(i_check, j), 'matlab.graphics.GraphicsPlaceholder')
+          break;
+        end
+        last_row_in_col_j = i_check;
+      end
+    end
+    if i > last_row_in_col_j
+      % Es existiert kein Subplot. Nichts machen
+      continue
+    end
     % x-Label entfernen
     if i < last_row_in_col_j
       if any(flag == [1,3])

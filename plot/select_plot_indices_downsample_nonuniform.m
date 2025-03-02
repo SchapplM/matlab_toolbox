@@ -10,7 +10,9 @@
 % y [N x M]
 %   signal values
 % xthresh, ythresh
-%   Thresholds for removing markers
+%   Thresholds for removing markers.
+%   For logarithmic axes the threshold should be >1 as the ratio and not
+%   the difference of two values is considered for reduction
 % logscales [2x1]
 %   true, if the x or y axis is scaled logarithmically
 % 
