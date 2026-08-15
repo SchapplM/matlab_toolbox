@@ -30,6 +30,8 @@
 %   0: Kein Fehler
 %   1: Datei nicht gefunden
 %   2-4: Fehler beim kompilieren
+%   7: Kompilieren erfolgreich, aber die Mex-Datei ist erst nach einem
+%      Neustart von Matlab benutzbar (alte JIT-Mex-Datei in der Sitzung)
 % 
 % Beispiel: matlabfcn2mex({'rotx', 'roty', 'rotz'});
 
@@ -125,7 +127,9 @@ for i = 1:length(KompDat)
       eval([mexdat_name,';']);
     catch err
       if strcmp(err.identifier, 'MATLAB:mex:ErrInvalidMEXFile') || ...
-          strcmp(err.identifier, 'MATLAB:invalidMEXFile') % alte Version
+          strcmp(err.identifier, 'MATLAB:invalidMEXFile') || ... % alte Version
+          ... % Mit einer anderen Version des Matlab Coders erzeugte JIT-Mex-Datei
+          strcmp(err.identifier, 'Coder:FE:JitMEXBuiltInDifferentRelease')
         % Mex-Datei funktioniert nicht
         neukompilieren = true;
         fprintf('\t%s\n', err.message);
@@ -230,6 +234,25 @@ for i = 1:length(KompDat)
         error('matlabfcn2mex:file_locked', 'Fehler beim Löschen der Datei. Eventuell gesperrt?');
       end
       eval(cmdstring);
+    end
+    % Prüfe, ob die neu erzeugte Mex-Datei in dieser Matlab-Sitzung auch
+    % benutzbar ist. Matlab merkt sich die Zuordnung von Funktionsname zu
+    % JIT-Mex-Datei pro Sitzung. Wurde unter diesem Namen bereits eine mit
+    % einer anderen Coder-Version erzeugte JIT-Mex-Datei geladen, bleibt der
+    % Fehler auch nach dem Neukompilieren bestehen (unabhängig vom Inhalt
+    % der Datei; clear mex/functions/all hilft nicht). Dann muss Matlab neu
+    % gestartet werden. Ohne diesen Hinweis würde die aufrufende Funktion
+    % (z.B. serroblib_update_template_functions) endlos neu kompilieren.
+    try
+      eval([mexdat_name,';']);
+    catch err2
+      if strcmp(err2.identifier, 'Coder:FE:JitMEXBuiltInDifferentRelease')
+        fprintf(['\tDie neu kompilierte Mex-Datei ist erst nach einem ', ...
+          'Neustart von Matlab benutzbar.\n\t(Der Funktionsname %s ist in ', ...
+          'dieser Sitzung noch mit der alten JIT-Mex-Datei verknüpft.)\n'], ...
+          mexdat_name);
+        Fehlercode = 7;
+      end % andere Fehler (z.B. WrongNumberOfInputs): Mex-Datei ist i.O.
     end
   catch err
     if strcmp(err.identifier,'emlc:compilationError')
