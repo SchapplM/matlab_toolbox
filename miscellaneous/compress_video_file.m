@@ -85,7 +85,18 @@ if verbosity < 2
   % Disable ffmpeg progress output
   cmd = [cmd, ' -loglevel 0'];
 end
-% Run ffmpeg with arguments
+% Run ffmpeg with arguments.
+% On Linux, Matlab prepends its own library folder to LD_LIBRARY_PATH and
+% passes the variable on to child processes. The ffmpeg of the system then
+% loads Matlab's libstdc++, which is older than the one ffmpeg was built
+% against. This makes ffmpeg fail with "GLIBCXX_x.y.z not found". Therefore
+% clear the variable for the call. It is restored when this function returns
+% (also in case of an error).
+if isunix()
+  ldpath_backup = getenv('LD_LIBRARY_PATH');
+  ldpath_restore = onCleanup(@() setenv('LD_LIBRARY_PATH', ldpath_backup));
+  setenv('LD_LIBRARY_PATH', '');
+end
 res = system(cmd);
 if res == 0
   % successful conversion without errors
