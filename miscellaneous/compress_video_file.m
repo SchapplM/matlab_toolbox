@@ -76,7 +76,14 @@ clear vidObj
 % AV settings, see ffmpeg documentation. The colour format is non-standard
 % and comes from the settings of the Matlab figures.
 % The video setting (h264, ...) is suited for integration in PowerPoint.
-avsettings = sprintf(' -vf %sformat=yuv420p -c:v libx264 -preset slower -profile:v high -level 51 -an', cropoptions);
+% The Matlab VideoWriter stores the AVI as bgr24 using the full value range.
+% Without the explicit scale filter, ffmpeg converts it to the TV range
+% (16-235), and the decoded frames no longer reach pure white: a figure with
+% background 'w' came out as RGB (251,253,250), a visible tint on large
+% uniform areas. Keep the full range and tag it as such with -color_range pc,
+% so that players interpret the values the way they were written.
+avsettings = sprintf([' -vf %sscale=in_range=full:out_range=full,format=yuv420p', ...
+  ' -color_range pc -c:v libx264 -preset slower -profile:v high -level 51 -an'], cropoptions);
 [d,f,~] = fileparts(videofile_avi);
 videofile_mp4 = fullfile(d, [f, '.mp4']);
 % Always use ffmpeg (do not try to look for avconv or check availability)
